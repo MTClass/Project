@@ -5,6 +5,38 @@ path {
   fill: #555555;
   stroke: #aaaaaa;
 }
+body {
+  position: absolute;
+  margin: 0px;
+  font: 16px sans-serif;
+}
+.info {
+  color: #000;
+  position: absolute;
+  top: 450px;
+  left: 800px;
+}
+.tooltip {
+  position: absolute;
+  visibility: visible;
+  background-color: #aaa;
+  padding: 5px;
+}
+/* This style is used when dragging the dot */
+.active {
+  stroke: #000;
+  stroke-width: 2px;
+}
+
+path {
+  fill: #555555;
+  stroke: #aaaaaa;
+}
+  
+svg {
+  background-color: #4682b4;
+}
+ 
 </style>
 
 <body>
@@ -13,9 +45,14 @@ path {
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
 <script>
 var width = 960, height = 500;
+  
+var data;  // declare a global variable 
+  
 var svg = d3.select('body').append('svg')
     .attr('width', width)
     .attr('height', height)
+
+
 var threshold = d3.scaleThreshold()
     .domain([1, 10, 20, 200, 800, 2000, 5000, 10000])
     .range(d3.schemeOrRd[9]);
@@ -51,7 +88,7 @@ function ready(error, json, population) {
         pop = +pop[0][0];
         var aland = tract.properties.ALAND / 2589975.2356; 
   
-   //area in square miles
+//area in square miles
         tract.properties.density = pop / aland;
     });
     svg.selectAll('path.tract')
@@ -59,7 +96,7 @@ function ready(error, json, population) {
       .enter()
         .append('path')
         .attr('class', 'tract')
-//        .attr('d', path)
+        .attr('d', path)
         .style('fill', function (d) {return threshold(d.properties.density); })
         .style('stroke', '#000')
     
@@ -79,18 +116,60 @@ function ready(error, json, population) {
         .append('path')
         .attr('class', 'county')
         .attr('d', path)
-        .style('stroke', 'red')
+        .style('stroke', 'white')
         .style('stroke-width', '2px')
         .style('fill', 'none');
+  
     // 1. NEW: Define an array with Rockville MD longitude & latitude
     var Rockville = [-77.1528, 39.0840];
     // 2. NEW: Add an HTML <div> element that will function as the tooltip
     var tooltip = d3.select('body').append('div')
         .attr('class', 'tooltip')
         .text('Hello, world!')
+    // 3. NEW: Add a draggable circle to the map
+  // See: https://bl.ocks.org/mbostock/22994cc97fefaeede0d861e6815a847e)
+    var layer2 = svg.append("g");
+  layer2.append("circle")
+      .attr("class", "Rockville")
+      .attr("cx", projection(Rockville)[0])
+      .attr("cy", projection(Rockville)[1])
+      .attr("r", 10)
+      .style("fill", "yellow")  // Make the dot yellow
+  
+      .call(d3.drag()           // Add the drag behavior
+        .on("start", dragstarted)
+        .on("drag", dragged)
+        .on("end", dragended));
+  
+  function dragstarted(d) {
+    // Highlight the circle that's being dragged
+  d3.select(this).raise().classed("active", true);
+    // Make the tooltip visible during drag events
+  tooltip.style("visibility", "visible");
+  }
+function dragged(d) {
+  // Reposition the circle to follow the mouse during drag
+  d3.select(this).attr("cx", d3.event.x).attr("cy", d3.event.y);
+ // Reposition the tooltip too
+  tooltip.style("left", (d3.event.x - 30) + "px").style("top", (d3.event.y - 50) + "px");
+ 
+  // Add the name of the County to the tooltip
+  layer1.selectAll('path')
+      .filter(function(d) { return d3.geoContains(d, projection.invert([d3.event.x, d3.event.y])) })
+      .each(function(d) { tooltip.html(d.properties.name); })
+}
+
+function dragended(d) {
+  // Eliminate the highlight when dragging ends
+  d3.select(this).classed("active", false);
+  // Hide the tooltip
+  tooltip.style("visibility", "hidden"); 
+}
+}  
+ //Add legend
     
     addLegend();
-}
+
 function addLegend() {
   var formatNumber = d3.format("d");
   var x = d3.scalePow().exponent('.15')
