@@ -36,3 +36,7 @@ Specific objectives (create a separate gist for each one)
 * Add specific links in your repository to identify your data sources -- "census.gov" isn't suffficient.
 Mike Bostocks https://bl.ocks.org/mbostock/5562380 for California Chloropeth tutorial
 Mike Bostocks https://bl.ocks.org/mbostock/22994cc97fefaeede0d861e6815a847e for a simpler d3-drag demo
+w3schools.com
+Decennial Census data from census.gov
+MD State population and tract datat from American Community Survey at https://www.census.gov/data/developers/data-sets/acs-5year.2015.html
+
