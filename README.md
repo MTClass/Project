@@ -1,10 +1,9 @@
-## Maryland county
+## Maryland Population Densisty Map
 
-Interactive chloropleth map based on data from census.gov
-
+Interactive chloropleth map based on Mike Bostocks California Densisty Map at https://bl.ocks.org/mbostock/5562380
 The Goal is to identify the counties with the greatest population.
 The chart will show how the population is distributed by age cohorts, which
-will tell the story as to what age cohorts are concentrated in specific Counties, e.g., PG County has the largest population ages 20-24, perhaps because of UMD, and Montgomery County seems to attract retirees.
+will tell the story as to what age cohorts are concentrated in specific Counties, e.g., PG County has the largest population ages 20-24, perhaps because of UMD, and Montgomery County seems to attract retirees because it has a large cohort of population ages 65+.
 
 ### Data
 
