@@ -1,32 +1,38 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>
+  
 path {
   fill: #555555;
   stroke: #aaaaaa;
 }
+  
 body {
   position: absolute;
   margin: 0px;
   font: 12px sans-serif;
 }
+  
 .info {
   color: #000;
   position: absolute;
   top: 450px;
   left: 800px;
 }
+  
 .tooltip {
   position: absolute;
   visibility: visible;
   background-color: #aaa;
   padding: 5px;
 }
+  
 /* This style is used when dragging the dot */
 .active {
   stroke: #000;
   stroke-width: 2px;
 }
+  
 path {
   fill: #555555;
   stroke: #aaaaaa;
@@ -73,36 +79,36 @@ function ready(error, json, population) {
     geojson = topojson.feature(json, json.objects.tracts);
     tracts = geojson.features;
 
- // Set the projection's scale and translate based on the GeoJSON
+// Set the projection's scale and translate based on the GeoJSON
     projection.fitSize([960, 500], geojson);
 
-  // Extract an array of features (one tract for each feature)
+// Extract an array of features (one tract for each feature)
     tracts.forEach(function(tract) {
-        var countyfips = tract.properties.COUNTYFP;
-        var tractce = tract.properties.TRACTCE;
-        pop =  population.filter(function(d) { return (d[2] === countyfips)
+    var countyfips = tract.properties.COUNTYFP;
+    var tractce = tract.properties.TRACTCE;
+    pop =  population.filter(function(d) { return (d[2] === countyfips)
                                                    && (d[3] === tractce); });
-        pop = +pop[0][0];
-        var aland = tract.properties.ALAND / 2589975.2356;
+     pop = +pop[0][0];
+     var aland = tract.properties.ALAND / 2589975.2356;
 
 //area in square miles
-        tract.properties.density = pop / aland;
+      tract.properties.density = pop / aland;
     });
-    svg.selectAll('path.tract')
-        .data(tracts)
+    	svg.selectAll('path.tract')
+      .data(tracts)
       .enter()
-        .append('path')
-        .attr('class', 'tract')
-        .attr('d', path)
-        .style('fill', function (d) {return threshold(d.properties.density); })
+      .append('path')
+      .attr('class', 'tract')
+      .attr('d', path)
+      .style('fill', function (d) {return 				 threshold(d.properties.density); })
         .style('stroke', '#000')
 
 // Draw all counties in MD
     fips = geojson.features.map(function(d) { return d.properties.COUNTYFP; });
     uniqueFips = d3.set(fips).values();
     counties = uniqueFips.map(function(fips) {
-      return json.objects.tracts.geometries
-          .filter(function(d) { return d.properties.COUNTYFP === fips; });
+    return json.objects.tracts.geometries
+    .filter(function(d) { return d.properties.COUNTYFP === fips; });
 
     });
  // Construct county boundary from tracts, and add state & county FIPS
@@ -131,94 +137,95 @@ function ready(error, json, population) {
         .text('Hello, world!')
     
  //NEW: Add a draggable circle to the map
-  // See: https://bl.ocks.org/mbostock/22994cc97fefaeede0d861e6815a847e)
+ // See: https://bl.ocks.org/mbostock/22994cc97fefaeede0d861e6815a847e)
     var layer2 = svg.append("g");
-  layer2.append("circle")
-      .attr("class", "Rockville")
-      .attr("cx", projection(Rockville)[0])
-      .attr("cy", projection(Rockville)[1])
-      .attr("r", 10)
-      .style("fill", "yellow")  // Make the dot yellow
+  	layer2.append("circle")
+    .attr("class", "Rockville")
+    .attr("cx", projection(Rockville)[0])
+    .attr("cy", projection(Rockville)[1])
+    .attr("r", 10)
+    .style("fill", "yellow")  // Make the dot yellow
 
-      .call(d3.drag()           // Add the drag behavior
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended));
+    .call(d3.drag()           // Add the drag behavior
+    .on("start", dragstarted)
+    .on("drag", dragged)
+    .on("end", dragended));
 
-  function dragstarted(d) {
-    // Highlight the circle that's being dragged
-  d3.select(this).raise().classed("active", true);
-    // Make the tooltip visible during drag events
-  tooltip.style("visibility", "visible");
+  	function dragstarted(d) {
+ // Highlight the circle that's being dragged
+ 		d3.select(this).raise().classed("active", true);
+ // Make the tooltip visible during drag events
+  	tooltip.style("visibility", "visible");
   }
-function dragged(d) {
-  // Reposition the circle to follow the mouse during drag
-  d3.select(this).attr("cx", d3.event.x).attr("cy", d3.event.y);
- // Reposition the tooltip too
-  tooltip.style("left", (d3.event.x - 30) + "px").style("top", (d3.event.y - 50) + "px");
+		function dragged(d) {
+ // Reposition the circle to follow the mouse during drag
+ 	 	d3.select(this).attr("cx", d3.event.x).attr("cy", d3.event.y);
+      
+// Reposition the tooltip too
+  	tooltip.style("left", (d3.event.x - 30) + "px").style("top", (d3.event.y - 50) + "px");
 
-  // Add the name of the County to the tooltip
-  d3.selectAll('path.county')
-      .filter(function(d) { return d3.geoContains(d, projection.invert([d3.event.x, d3.event.y])) })
-      .each(function(d) {
+ // Add the name of the County to the tooltip
+  	d3.selectAll('path.county')
+    .filter(function(d) { return d3.geoContains(d, projection.invert([d3.event.x, d3.event.y])) })
+    .each(function(d) {
     var codes = ["001","003","005","009","011","013","015","017","019","021","023","025","027","029","031","033","035","037","039","041","043","045","047"]
-var counties = ["Alleghany","Anne Arundel","Baltimore","Calvert","Caroline","Carrol","Cecil","Charles","Dorchester","Frederick","Garret","Hartford","Howard","Kent","Montgomery","Prince George's","Queen Anne's","Saint Mary's","Somerset","Talbot","Washington","Wicomico","Worcester"]
-var pf = d.countyfp
-var name = ""
-for(i = 0; i < codes.length; i++){
-if(codes[i] == pf){
-name = counties[i];
-break;
+		var counties = ["Alleghany","Anne Arundel","Baltimore","Calvert","Caroline","Carrol","Cecil","Charles","Dorchester","Frederick","Garret","Hartford","Howard","Kent","Montgomery","Prince George's","Queen Anne's","Saint Mary's","Somerset","Talbot","Washington","Wicomico","Worcester"]
+		var pf = d.countyfp
+		var name = ""
+		for(i = 0; i < codes.length; i++){
+		if(codes[i] == pf){
+		name = counties[i];
+		break;
 }
 }
-        console.log('here it is', d);
-        tooltip.html(name);
+    console.log('here it is', d);
+    tooltip.html(name);
      
         
       })
 }
-function dragended(d) {
-  // Eliminate the highlight when dragging ends
-  d3.select(this).classed("active", false);
+		function dragended(d) {
+// Eliminate the highlight when dragging ends
+  	d3.select(this).classed("active", false);
   
-  // Hide the tooltip
-  tooltip.style("visibility", "hidden");
+// Hide the tooltip
+	  tooltip.style("visibility", "hidden");
 }
 }
  //Add legend
 
     addLegend();
-function addLegend() {
-  var formatNumber = d3.format("d");
-  var x = d3.scalePow().exponent('.15')
-      .domain([1, 80000])
-      .range([0, 300]);
-  var xAxis = d3.axisBottom(x)
-      .tickSize(13)
-      .tickValues(threshold.domain())
-      .tickFormat(formatNumber)
-  var g = svg.append("g")
-      .attr('transform', 'translate(100, 200)')
-      .call(xAxis);
-  g.select(".domain")
-      .remove();
-  g.selectAll("rect")
+		function addLegend() {
+  	var formatNumber = d3.format("d");
+  	var x = d3.scalePow().exponent('.15')
+    .domain([1, 80000])
+    .range([0, 300]);
+  	var xAxis = d3.axisBottom(x)
+    .tickSize(13)
+    .tickValues(threshold.domain())
+    .tickFormat(formatNumber)
+  	var g = svg.append("g")
+    .attr('transform', 'translate(100, 200)')
+    .call(xAxis);
+  	g.select(".domain")
+    .remove();
+  	g.selectAll("rect")
     .data(threshold.range().map(function(color) {
-      var d = threshold.invertExtent(color);
-      if (d[0] == null) d[0] = x.domain()[0];
-      if (d[1] == null) d[1] = x.domain()[1];
-      return d;
+    var d = threshold.invertExtent(color);
+    if (d[0] == null) d[0] = x.domain()[0];
+    if (d[1] == null) d[1] = x.domain()[1];
+    return d;
     }))
     .enter().insert("rect", ".tick")
-      .attr("height", 8)
-      .attr("x", function(d) { return x(d[0]); })
-      .attr("width", function(d) { return x(d[1]) - x(d[0]); })
-      .attr("fill", function(d) { return threshold(d[0]); });
-  g.append("text")
-      .attr("fill", "#000")
-      .attr("font-weight", "bold")
-      .attr("text-anchor", "start")
-      .attr("y", -6)
-      .text("Population per square mile");
+    .attr("height", 8)
+    .attr("x", function(d) { return x(d[0]); })
+    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+    .attr("fill", function(d) { return threshold(d[0]); });
+  	g.append("text")
+    .attr("fill", "#000")
+    .attr("font-weight", "bold")
+    .attr("text-anchor", "start")
+    .attr("y", -6)
+    .text("Population per square mile");
 }
 </script>
