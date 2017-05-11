@@ -1,9 +1,10 @@
+## Final Products
+
 ## Maryland Population Densisty Map
 
 Interactive chloropleth map based on Mike Bostocks California Densisty Map at https://bl.ocks.org/mbostock/5562380
-The Goal is to identify the counties with the greatest population.
-The chart will show how the population is distributed by age cohorts, which
-will tell the story as to what age cohorts are concentrated in specific Counties, e.g., PG County has the largest population ages 20-24, perhaps because of UMD, and Montgomery County seems to attract retirees because it has a large cohort of population ages 65+.
+https://bl.ocks.org/MTClass/ac07c1f5e40ead6930c32a4a0e2ae67a
+
 
 ### Data
 
@@ -22,9 +23,16 @@ this demo shows how to reconstruct all the counties from the census tracts.
 Bar chart showing population of MD Counties-
 blockbuilderis shown here-http://blockbuilder.org/MTClass/39e797c364a98a8f4dc8f7ea3c91f6b4
 gist is at https://github.com/MTClass/Project/blob/master/bar.html
-
+The Goal is to identify the counties with the greatest population, which is Montgomery County
 Stacked Bar Chart
 This chart shows the age cohort of MD Counties.  The chart is at -http://blockbuilder.org/MTClass/cb1415bd902757078f581bba71e887d4
+Code it at stackedbar.html at https://github.com/MTClass/Project/tree/master
+The chart will show how the population is distributed by age cohorts, which
+will tell the story as to what age cohorts are concentrated in specific Counties, e.g., PG County has the largest population ages 20-24, perhaps because of UMD, and Montgomery County seems to attract retirees because it has a large cohort of population ages 65+.
+Radial Chart-
+This map shows the race composition of population in MAryland Counties
+https://bl.ocks.org/MTClass/0fdaf27f08a1ab7938c516a7c2e43498
+
 
 
 
