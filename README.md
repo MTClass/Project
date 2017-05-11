@@ -21,7 +21,7 @@ this demo shows how to reconstruct all the counties from the census tracts.
 ## Charts
 Bar chart showing population of MD Counties-
 blockbuilderis shown here-http://blockbuilder.org/MTClass/39e797c364a98a8f4dc8f7ea3c91f6b4
-gist is at bar.html in the project file
+gist is at https://github.com/MTClass/Project/blob/master/bar.html
 
 Stacked Bar Chart
 This chart shows the age cohort of MD Counties.  The chart is at -http://blockbuilder.org/MTClass/cb1415bd902757078f581bba71e887d4
