@@ -1,4 +1,4 @@
-## Final Products
+## Map with a story.  Once upon a time in Maryland......
 1. Maryland Map showing the population densities, and the County labels while moving the circle
 https://bl.ocks.org/MTClass/ac07c1f5e40ead6930c32a4a0e2ae67a
 2. Bar Graph shows the populations in all counties, Montgomery being the largest
