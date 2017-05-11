@@ -18,6 +18,12 @@ this demo shows how to reconstruct all the counties from the census tracts.
 
 * https://umbcvis.github.io/projects/mtclass
 
+## Charts
+Bar chart showing population of MD Counties-
+blockbuilderis shown here-http://blockbuilder.org/MTClass/39e797c364a98a8f4dc8f7ea3c91f6b4
+gist is at bar.html in the project file
+
+
 ## To Do
 
 #### Technical
