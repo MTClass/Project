@@ -97,6 +97,23 @@ d3.csv(url, function(error, data) {
   // add the y Axis
   svg.append("g")
       .call(d3.axisLeft(y));
+  
+  // NEW: Title
+svg.append('text')
+    .attr('x', width / 4)
+    .attr('y', "1em")
+    .style('font-size', '1.5em')
+    .style('text-anchor', 'middle')
+    .text('Maryland Population by Counties')
+
+// NEW: Source
+svg.append('text')
+    .attr('x', width / 5)
+    .attr('y', "30em")
+    .style('font-size', '1em')
+    .style('text-anchor', 'middle')
+    .text('Source : ACS 2011-2015')
+
 });
 </script>
 </body>
