@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset='utf-8'>
-<title>MD Counties</title>
+<title>MD Counties 4</title>
 <style>
 body {
   margin: 0;
@@ -30,14 +30,15 @@ var svg = d3.select("svg");
 
 var defs = svg.select("defs");
 
-// Note: scale and translate will be determined by the data
+// MD projections Note: scale and translate will be determined by the data
 var projection = d3.geoConicConformal()
     .parallels([38 + 18 / 60, 39 + 27 / 60])
     .rotate([77, -37 -40 / 60]);
   
+// Define the path
 var path = d3.geoPath()
     .projection(projection);
-
+  
 var threshold = d3.scaleThreshold()
     .domain([1, 10, 50, 200, 500, 2000, 8000, 30000])
     .range(d3.schemeOrRd[9]);
@@ -62,11 +63,14 @@ svg.append("g")
     .attr('transform', 'translate(' + [radius + 60, radius + 40] + ')')
 
 // Load the topojson and the population data
+
+
 var counties = "https://raw.githubusercontent.com/umbcvis/classes/master/class-14/counties.json";
-  var population = "https://raw.githubusercontent.com/MTClass/Project/master/population.json";
-d3.queue()
+var population = "https://raw.githubusercontent.com/MTClass/Project/master/population.csv";
+ // Load the topojson and the population data
+d3.queue() 
     .defer(d3.json, counties)
-    .defer(d3.json, population)
+    .defer(d3.csv, population)
     .await(ready);
 
 // Wait for the data to arrive, then begin processing
@@ -84,11 +88,11 @@ function ready(error, us, population) {
   var counties = topojson.feature(us, us.objects.counties);
 
   // Get MD counties as array of GeoJSON features
-  var maryland = counties.features.filter(function(d) { return d.properties.STATEFP === '24' })
+  var MD = counties.features.filter(function(d) { return d.properties.STATEFP === '24' })
 
   // Make the population & pie-chart data easy to query by FIPS code
   var pieData = d3.map();
-  maryland.forEach(function(d, i) {
+  MD.forEach(function(d, i) {
     var pop = data.get(d.properties.GEOID);
     var aland = d.properties.ALAND / 2589975.2356; // area in square miles
     d.populationDensity = pop / aland; // population per square mile
@@ -99,7 +103,7 @@ function ready(error, us, population) {
                                      { key: "density", value: d.populationDensity }] )
   })
 
-  projection.fitExtent([[10,10],[960 - 20, 500 - 20]], { type: "FeatureCollection", features: newyork });
+  projection.fitExtent([[10,10],[960 - 20, 500 - 20]], { type: "FeatureCollection", features: MD });
 
   // Plot the boundary of the US
   svg.append("path")
@@ -122,13 +126,13 @@ function ready(error, us, population) {
   // Plot the state boundaries
   svg.append("path")
       .attr("stroke", "#000")
-      .attr("stroke-width", 1)
+      .attr("stroke-width", 3)
       .attr("fill", "none")
       .attr("d", path(topojson.mesh(us, us.objects.counties, function(a, b) { return a.properties.STATEFP !== b.properties.STATEFP; })));
 
   // Plot the individual counties
   svg.selectAll('path.county')
-      .data( newyork )
+      .data( MD )
     .enter().append("path")
       .attr("d", path)
       .attr("class", "county")
@@ -148,7 +152,7 @@ function ready(error, us, population) {
         d3.select(this).attr('stroke-width', 0.5)
         d3.select("#pie").selectAll(".arc").remove();
       });
-
+}
 
 function addPie(data) {
   var arc = d3.select("#pie").selectAll(".arc")
